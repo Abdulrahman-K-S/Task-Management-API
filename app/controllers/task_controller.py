@@ -1,4 +1,4 @@
-from flask import request, jsonify
+from flask import request, jsonify, g
 from services import TaskService
 
 class TaskController:
@@ -9,66 +9,61 @@ class TaskController:
     """
 
     @staticmethod
-    def create_task(redis_client):
+    def create_task():
         """create_task
 
         Handles the HTTP POST request to create a new task.
-
-        Arguments:
-            redis_client (RedisClient): An instance of RedisClient to interact with Redis.
 
         Return:
             (Response): A Flask response object containing the created task data and a success message.
         """
         data = request.get_json()
-        response = TaskService.create_task(data, redis_client)
+        response = TaskService.create_task(data)
+        print("In taskcontroller create_task")
         return jsonify(response), 201
 
     @staticmethod
-    def get_task(task_id, redis_client):
+    def get_task(task_id):
         """get_task
 
         Handles the HTTP GET request to retrieve a task by its ID.
 
         Arguments:
             task_id (str): The ID of the task to retrieve.
-            redis_client (RedisClient): An instance of RedisClient to interact with Redis.
 
         Return:
             (Response): A Flask response object containing the task data if found, else an error message.
         """
-        response = TaskService.get_task(task_id, redis_client)
+        response = TaskService.get_task(task_id)
         return jsonify(response), 200 if 'error' not in response else 404
 
     @staticmethod
-    def update_task(task_id, redis_client):
+    def update_task(task_id):
         """update_task
 
         Handles the HTTP PUT request to update an existing task.
 
         Arguments:
             task_id (str): The ID of the task to update.
-            redis_client (RedisClient): An instance of RedisClient to interact with Redis.
 
         Return:
             (Response): A Flask response object containing the updated task data and a success message.
         """
         data = request.get_json()
-        response = TaskService.update_task(task_id, data, redis_client)
+        response = TaskService.update_task(task_id, data)
         return jsonify(response), 200 if 'error' not in response else 404
 
     @staticmethod
-    def delete_task(task_id, redis_client):
+    def delete_task(task_id):
         """delete_task
 
         Handles the HTTP DELETE request to delete a task by its ID.
 
         Arguments:
             task_id (str): The ID of the task to delete.
-            redis_client (RedisClient): An instance of RedisClient to interact with Redis.
 
         Return:
             (Response): A Flask response object containing a success message if the task was deleted, else an error message.
         """
-        response = TaskService.delete_task(task_id, redis_client)
+        response = TaskService.delete_task(task_id)
         return jsonify(response), 200 if 'error' not in response else 404

@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, g
 from config import Config
 from utils import RedisClient
 
@@ -7,6 +7,11 @@ def create_app():
     app.config.from_object(Config)
 
     redis_client = RedisClient(app.config['REDIS_URL'])
+    app.redis_client = redis_client
+
+    @app.before_request
+    def before_request():
+        g.redis_client = redis_client
 
     from routes import tasks_bp
 

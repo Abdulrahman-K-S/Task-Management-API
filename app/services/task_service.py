@@ -1,4 +1,5 @@
 import uuid
+from flask import g
 from models import Task
 
 class TaskService:
@@ -8,14 +9,13 @@ class TaskService:
     includes creating the task, updating the task, and deleting the task
     """
     @staticmethod
-    def create_task(data, redis_client):
+    def create_task(data):
         """create_task
 
         This method creates a new task and stores it into the redis client.
 
         Arguments:
             data (dict): A dictionary containing the task data.
-            redis_client (RedisClient): An instance of RedisClient.
 
         Return:
             (dict): A dictionary containing the task created and a success message.
@@ -26,26 +26,25 @@ class TaskService:
             title=data['title'],
             description=data.get('description', '')
         )
-        redis_client.set(task_id, task.to_dict())
+        g.redis_client.set(task_id, task.to_dict())
         return {
             'message': 'Task created succesfully',
             'task': task.to_dict()
         }
 
     @staticmethod
-    def get_task(task_id, redis_client):
+    def get_task(task_id):
         """get_task
 
         Retrieves a task from Redis by its ID.
 
         Arguments:
             task_id (str): The ID of the task to retrieve.
-            redis_client (RedisClient): An instance of RedisClient to interact with Redis.
 
         Return:
             (dict): A dictionary containing the task data if found, else an error message.
         """
-        task_data = redis_client.get(task_id)
+        task_data = g.redis_client.get(task_id)
         if task_data:
             task = Task.from_dict(task_data)
             return task.to_dict()
@@ -53,7 +52,7 @@ class TaskService:
             return {'error': 'Task not found'}
 
     @staticmethod
-    def update_task(task_id, data, redis_client):
+    def update_task(task_id, data):
         """update_task
 
         Updates an existing task in Redis.
@@ -61,18 +60,17 @@ class TaskService:
         Arguments:
             task_id (str): The ID of the task to update.
             data (dict): A dictionary containing the updated task data.
-            redis_client (RedisClient): An instance of RedisClient to interact with Redis.
 
         Return:
             (dict): A dictionary containing the updated task data and a success message.
         """
-        task_data = redis_client.get(task_id)
+        task_data = g.redis_client.get(task_id)
         if task_data:
             task = Task.from_dict(task_data)
             task.title = data.get('title', task.title)
             task.description = data.get('description', task.description)
             task.status = data.get('status', task.status)
-            redis_client.set(task_id, task.to_dict())
+            g.redis_client.set(task_id, task.to_dict())
             return {
                 'message': 'Task updated successfully',
                 'task': task.to_dict()
@@ -81,22 +79,21 @@ class TaskService:
             return {'error': 'Task not found'}
 
     @staticmethod
-    def delete_task(task_id, redis_client):
+    def delete_task(task_id):
         """delete_task
 
         Deletes a task from Redis by its ID.
 
         Arguments:
             task_id (str): The ID of the task to delete.
-            redis_client (RedisClient): An instance of RedisClient to interact with Redis.
 
         Return:
             (dict): A dictionary containing a success message if the task was deleted,
             else an error message.
         """
-        task_data = redis_client.get(task_id)
+        task_data = g.redis_client.get(task_id)
         if task_data:
-            redis_client.delete(task_id)
+            g.redis_client.delete(task_id)
             return {'message': 'Task deleted successfully'}
         else:
             return {'error': 'Task not found'}
