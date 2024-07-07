@@ -1,6 +1,6 @@
 from flask import Flask
 from config import Config
-from utils.redis_client import RedisClient
+from utils import RedisClient
 
 def create_app():
     app = Flask(__name__)
