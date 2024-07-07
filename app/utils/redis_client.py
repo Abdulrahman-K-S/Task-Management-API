@@ -1,5 +1,4 @@
 import redis
-from flask import current_app
 
 class RedisClient:
     """RedisClient
@@ -16,7 +15,7 @@ class RedisClient:
         Argument:
             url (str): The url to be passed to the redis client
         """
-        self._url = url or current_app.config['REDIS_URL']
+        self._url = url
         self.client = redis.StrictRedis.from_url(self._url)
 
     def get_client(self):
@@ -53,5 +52,3 @@ class RedisClient:
             (any): The value associated with the key if it's present
         """
         return self.client.get(key)
-
-redis_client = RedisClient()
