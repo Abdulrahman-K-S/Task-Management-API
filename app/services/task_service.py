@@ -1,5 +1,5 @@
 import uuid
-from app.models import Task
+from models import Task
 
 class TaskService:
     """TaskService
