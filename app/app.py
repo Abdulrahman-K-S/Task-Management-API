@@ -8,6 +8,10 @@ def create_app():
 
     redis_client = RedisClient(app.config['REDIS_URL'])
 
+    from routes import tasks_bp
+
+    app.register_blueprint(tasks_bp, url_prefix='/api')
+
     return app
 
 if __name__ == "__main__":
