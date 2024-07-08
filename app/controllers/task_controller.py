@@ -1,5 +1,6 @@
 from flask import request, jsonify, g
 from services import TaskService
+from flask_restx import abort
 
 class TaskController:
     """TaskController
@@ -17,10 +18,13 @@ class TaskController:
         Return:
             (Response): A Flask response object containing the created task data and a success message.
         """
-        data = request.get_json()
-        response = TaskService.create_task(data)
-        print("In taskcontroller create_task")
-        return jsonify(response), 201
+        data = request.json
+
+        if not data or 'title' not in data:
+            abort(400, 'Task title is required')
+
+        task = TaskService.create_task(data)
+        return {"message": "Task created successfully", "task": task}, 201
 
     @staticmethod
     def get_task(task_id):
@@ -34,8 +38,12 @@ class TaskController:
         Return:
             (Response): A Flask response object containing the task data if found, else an error message.
         """
-        response = TaskService.get_task(task_id)
-        return jsonify(response), 200 if 'error' not in response else 404
+        task = TaskService.get_task(task_id)
+        
+        if not task:
+            abort(404, 'Task not found')
+
+        return {"task": task}, 200
 
     @staticmethod
     def update_task(task_id):
@@ -49,9 +57,13 @@ class TaskController:
         Return:
             (Response): A Flask response object containing the updated task data and a success message.
         """
-        data = request.get_json()
-        response = TaskService.update_task(task_id, data)
-        return jsonify(response), 200 if 'error' not in response else 404
+        data = request.json
+
+        if not data:
+            abort(400, 'No data provided')
+
+        task = TaskService.update_task(task_id, data)
+        return {"message": "Task updated successfully", "task": task}, 200
 
     @staticmethod
     def delete_task(task_id):
@@ -65,5 +77,5 @@ class TaskController:
         Return:
             (Response): A Flask response object containing a success message if the task was deleted, else an error message.
         """
-        response = TaskService.delete_task(task_id)
-        return jsonify(response), 200 if 'error' not in response else 404
+        TaskService.delete_task(task_id)
+        return {"message": "Task deleted successfully"}, 200

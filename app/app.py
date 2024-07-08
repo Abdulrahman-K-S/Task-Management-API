@@ -7,7 +7,7 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
-    redis_client = RedisClient(app.config['REDIS_URL'])
+    redis_client = RedisClient()
     app.redis_client = redis_client
 
     @app.before_request

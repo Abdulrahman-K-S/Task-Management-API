@@ -1,4 +1,5 @@
 import redis
+import json
 
 class RedisClient:
     """RedisClient
@@ -6,7 +7,7 @@ class RedisClient:
     This class contains all the necessities for the redis client which
     includes the connection creation to the setting of keys & values. 
     """
-    def __init__(self, url=None) -> None:
+    def __init__(self) -> None:
         """__init__
         
         Copying over the url for ease of access when using the client
@@ -15,8 +16,12 @@ class RedisClient:
         Argument:
             url (str): The url to be passed to the redis client
         """
-        self._url = url
-        self.client = redis.StrictRedis.from_url(self._url)
+        self.client = redis.Redis(
+            host="localhost",
+            password='',
+            port=6379,
+            db=1
+        )
 
     def get_client(self):
         """get_client
@@ -38,7 +43,8 @@ class RedisClient:
         Return:
             (int): The success of the operation.
         """
-        return self.client.set(key, value)
+        serialized_value = json.dumps(value)
+        return self.client.set(key, serialized_value)
 
     def get(self, key):
         """get
@@ -51,4 +57,7 @@ class RedisClient:
         Return:
             (any): The value associated with the key if it's present
         """
-        return self.client.get(key)
+        value = self.client.get(key)
+        if value is not None:
+            return json.loads(value)
+        return None

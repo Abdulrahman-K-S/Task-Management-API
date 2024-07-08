@@ -27,10 +27,7 @@ class TaskService:
             description=data.get('description', '')
         )
         g.redis_client.set(task_id, task.to_dict())
-        return {
-            'message': 'Task created succesfully',
-            'task': task.to_dict()
-        }
+        return task.to_dict()
 
     @staticmethod
     def get_task(task_id):
@@ -46,10 +43,8 @@ class TaskService:
         """
         task_data = g.redis_client.get(task_id)
         if task_data:
-            task = Task.from_dict(task_data)
-            return task.to_dict()
-        else:
-            return {'error': 'Task not found'}
+            return task_data
+        return None
 
     @staticmethod
     def update_task(task_id, data):
@@ -65,18 +60,15 @@ class TaskService:
             (dict): A dictionary containing the updated task data and a success message.
         """
         task_data = g.redis_client.get(task_id)
-        if task_data:
-            task = Task.from_dict(task_data)
-            task.title = data.get('title', task.title)
-            task.description = data.get('description', task.description)
-            task.status = data.get('status', task.status)
-            g.redis_client.set(task_id, task.to_dict())
-            return {
-                'message': 'Task updated successfully',
-                'task': task.to_dict()
-            }
-        else:
-            return {'error': 'Task not found'}
+        if not task_data:
+            return None
+        
+        task = Task(**task_data)
+        task.title = data.get('title', task.title)
+        task.description = data.get('description', task.description)
+        task.status = data.get('status', task.status)
+        g.redis_client.set(task_id, task.to_dict())
+        return task.to_dict()
 
     @staticmethod
     def delete_task(task_id):
@@ -91,9 +83,4 @@ class TaskService:
             (dict): A dictionary containing a success message if the task was deleted,
             else an error message.
         """
-        task_data = g.redis_client.get(task_id)
-        if task_data:
-            g.redis_client.delete(task_id)
-            return {'message': 'Task deleted successfully'}
-        else:
-            return {'error': 'Task not found'}
+        g.redis_client.client.delete(task_id)
