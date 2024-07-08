@@ -1,4 +1,5 @@
 from flask import Flask, g
+from flask_restx import Api
 from config import Config
 from utils import RedisClient
 
@@ -13,9 +14,11 @@ def create_app():
     def before_request():
         g.redis_client = redis_client
 
-    from routes import tasks_bp
+    api = Api(app, version='1.0', title='Task Management API',
+              description='A simple Task Management API')
 
-    app.register_blueprint(tasks_bp, url_prefix='/api')
+    from routes import tasks_bp
+    api.add_namespace(tasks_bp, path='/api')
 
     return app
 
