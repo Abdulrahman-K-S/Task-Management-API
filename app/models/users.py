@@ -7,7 +7,7 @@ class User:
         self.user_id = user_id
         self.username = username
         self.email = email
-        self.password = password  # In a real application, make sure to hash passwords
+        self.password = password
 
     def to_dict(self):
         """to_dict
@@ -21,7 +21,7 @@ class User:
             'user_id': self.user_id,
             'username': self.username,
             'email': self.email,
-            'password': self.password  # In a real application, exclude the password or use a hashed version
+            'password': self.password
         }
 
     @staticmethod
