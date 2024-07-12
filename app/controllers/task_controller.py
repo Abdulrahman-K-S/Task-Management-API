@@ -39,10 +39,8 @@ class TaskController:
             (Response): A Flask response object containing the task data if found, else an error message.
         """
         task = TaskService.get_task(task_id)
-        
         if not task:
             abort(404, 'Task not found')
-
         return {"task": task}, 200
 
     @staticmethod
@@ -77,5 +75,8 @@ class TaskController:
         Return:
             (Response): A Flask response object containing a success message if the task was deleted, else an error message.
         """
-        TaskService.delete_task(task_id)
+        task = TaskService.delete_task(task_id)
+
+        if not task:
+            abort(404, 'Task not found')
         return {"message": "Task deleted successfully"}, 200
