@@ -1,11 +1,11 @@
 class User:
     """User
 
-    This class represents a user with attributes such as id, username, and email.
+    This class represents a user with attributes such as id, name, email, and password.
     """
-    def __init__(self, user_id, username, email, password):
+    def __init__(self, user_id, name, email, password):
         self.user_id = user_id
-        self.username = username
+        self.name = name
         self.email = email
         self.password = password
 
@@ -19,7 +19,7 @@ class User:
         """
         return {
             'user_id': self.user_id,
-            'username': self.username,
+            'name': self.name,
             'email': self.email,
             'password': self.password
         }
@@ -38,7 +38,7 @@ class User:
         """
         return User(
             user_id=data['user_id'],
-            username=data['username'],
+            name=data['name'],
             email=data['email'],
             password=data['password']
         )
