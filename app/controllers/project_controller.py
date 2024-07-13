@@ -1,5 +1,5 @@
 from flask import request, jsonify, g
-from app.services.project_service import ProjectService
+from services import ProjectService
 from flask_restx import abort
 
 class ProjectController:

@@ -1,5 +1,5 @@
 from flask_restx import Namespace, Resource, fields
-from app.controllers.project_controller import ProjectController
+from controllers import ProjectController
 
 projects_bp = Namespace('projects', description='Project operations')
 
