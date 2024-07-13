@@ -17,9 +17,10 @@ def create_app():
     api = Api(app, version=Config.API_VERSION, title=Config.API_TITLE,
               description=Config.API_DESCRIPTION)
 
-    from routes import tasks_bp, users_bp
+    from routes import tasks_bp, users_bp, projects_bp
     api.add_namespace(tasks_bp, path='/api/tasks')
     api.add_namespace(users_bp, path='/api/users')
+    api.add_namespace(projects_bp, path='/api/projects')
 
     return app
 
