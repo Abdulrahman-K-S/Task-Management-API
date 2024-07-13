@@ -59,7 +59,9 @@ class TaskController:
 
         if not data:
             abort(400, 'No data provided')
-
+        if TaskService.get_task(task_id) is None:
+            abort(404, 'Task not found')
+        
         task = TaskService.update_task(task_id, data)
         return {"message": "Task updated successfully", "task": task}, 200
 
