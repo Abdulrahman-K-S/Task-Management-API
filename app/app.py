@@ -15,7 +15,7 @@ def create_app():
         g.redis_client = redis_client
 
     api = Api(app, version=Config.API_VERSION, title=Config.API_TITLE,
-              description=Config.API_DESCRIPTION, )
+              description=Config.API_DESCRIPTION)
 
     from routes import tasks_bp, users_bp
     api.add_namespace(tasks_bp, path='/api/tasks')
