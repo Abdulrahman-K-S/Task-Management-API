@@ -1,2 +1,1 @@
-from .task_controller import TaskController
-from .user_controller import UserController
+from . import TaskController, UserController, ProjectController
