@@ -61,6 +61,8 @@ class UserController:
 
         if not data:
             abort(400, 'No data provided')
+        if UserService.get_user(user_id) is None:
+            abort(404, 'User not found')
 
         user = UserService.update_user(user_id, data)
         return {"message": "User updated successfully", "user": user}, 200
@@ -77,5 +79,7 @@ class UserController:
         Return:
             (Response): A Flask response object containing a success message if the user was deleted, else an error message.
         """
+        if UserService.get_user(user_id) is None:
+            abort(404, 'User not found')
         UserService.delete_user(user_id)
         return {"message": "User deleted successfully"}, 200
