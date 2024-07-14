@@ -77,8 +77,7 @@ class TaskController:
         Return:
             (Response): A Flask response object containing a success message if the task was deleted, else an error message.
         """
-        task = TaskService.delete_task(task_id)
-
-        if not task:
-            abort(404, 'Task not found')
+        if TaskService.get_task(task_id) is None:
+            abort(404, "Task not found")
+        TaskService.delete_task(task_id)
         return {"message": "Task deleted successfully"}, 200

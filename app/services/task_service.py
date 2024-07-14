@@ -83,7 +83,4 @@ class TaskService:
             (dict): A dictionary containing a success message if the task was deleted,
             else an error message.
         """
-        task = g.redis_client.client.get(task_id)
-        if task:
-            return True
-        return False
+        g.redis_client.client.delete(task_id)
