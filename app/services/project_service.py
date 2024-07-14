@@ -69,7 +69,7 @@ class ProjectService:
             project.name = data.get('name', project.name)
         if data.get('description', project.description) not in execluded:
             project.description = data.get('description', project.description)
-        if data.get('status', project.status):
+        if data.get('status', project.status) not in execluded:
             project.status = data.get('status', project.status)
         g.redis_client.set(project_id, project.to_dict())
         return project.to_dict()
