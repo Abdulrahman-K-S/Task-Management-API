@@ -64,9 +64,13 @@ class TaskService:
             return None
         
         task = Task(**task_data)
-        task.title = data.get('title', task.title)
-        task.description = data.get('description', task.description)
-        task.status = data.get('status', task.status)
+        execluded = ['string', '']
+        if data.get('title', task.title) not in execluded:
+            task.title = data.get('title', task.title)
+        if data.get('description', task.description) not in execluded:
+            task.description = data.get('description', task.description)
+        if data.get('status', task.status) not in execluded:
+            task.status = data.get('status', task.status)
         g.redis_client.set(task_id, task.to_dict())
         return task.to_dict()
 

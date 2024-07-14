@@ -65,9 +65,13 @@ class UserService:
             return None
         
         user = User(**user_data)
-        user.name = data.get('name', user.name)
-        user.email = data.get('email', user.email)
-        user.password = data.get('password', user.password)
+        execluded = ['string', '']
+        if data.get('name', user.name) not in execluded:
+            user.name = data.get('name', user.name)
+        if data.get('email', user.email) not in execluded:
+            user.email = data.get('email', user.email)
+        if data.get('password', user.password) not in execluded:
+            user.password = data.get('password', user.password)
         g.redis_client.set(user_id, user.to_dict())
         return user.to_dict()
 
