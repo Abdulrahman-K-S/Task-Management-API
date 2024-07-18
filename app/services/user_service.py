@@ -108,3 +108,19 @@ class UserService:
             (list): A list of dictionaries containing all users.
         """
         return g.redis_client.get_all_with_prefix("user")
+
+    @staticmethod
+    def get_tasks_assigned_to_user(user_id):
+        """get_tasks_assigned_to_user
+
+        Retrieves all tasks assigned to a specific user.
+
+        Arguments:
+            user_id (str): The ID of the user to retrieve tasks for.
+
+        Return:
+            (list): A list of dictionaries containing all tasks assigned to the user.
+        """
+        tasks = g.redis_client.get_all_with_prefix("task")
+        assigned_tasks = [task for task in tasks if task.get('assigned_to') == user_id]
+        return assigned_tasks

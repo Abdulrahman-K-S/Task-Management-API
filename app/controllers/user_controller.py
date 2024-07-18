@@ -95,3 +95,18 @@ class UserController:
         """
         users = UserService.get_all_users()
         return {"users": users}, 200
+
+    @staticmethod
+    def get_tasks_assigned_to_user(user_id):
+        """get_tasks_assigned_to_user
+
+        Handles the HTTP GET request to retrieve all tasks assigned to a user.
+
+        Arguments:
+            user_id (str): The ID of the user.
+
+        Return:
+            (Response): A Flask response object containing all tasks assigned to the user.
+        """
+        tasks = UserService.get_tasks_assigned_to_user(user_id)
+        return {"user's tasks": tasks}, 200

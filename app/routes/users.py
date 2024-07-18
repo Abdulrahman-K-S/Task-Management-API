@@ -43,3 +43,11 @@ class User(Resource):
     def delete(self, user_id):
         """Delete a user given its identifier"""
         return UserController.delete_user(user_id)
+
+@users_bp.route('/<user_id>/tasks')
+@users_bp.param('user_id', 'The user identifier')
+class UserTasks(Resource):
+    @users_bp.response(200, 'User tasks found')
+    def get(self, user_id):
+        """Fetch the tasks assigned to user"""
+        return UserController.get_tasks_assigned_to_user(user_id)
