@@ -4,7 +4,7 @@ class Task:
     This class represents a task with a attributes such as
     id, title, and status.
     """
-    def __init__(self, task_id, title, description, status='pending', deleted='false'):
+    def __init__(self, task_id, title, description, status='pending', deleted='False'):
         self.task_id = task_id
         self.title = title
         self.description = description

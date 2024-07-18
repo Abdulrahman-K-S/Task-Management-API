@@ -42,7 +42,7 @@ class TaskService:
             (dict): A dictionary containing the task data if found, else an error message.
         """
         task_data = g.redis_client.get(f"task:{task_id}")
-        if task_data['deleted'] == 'True':
+        if task_data['deleted'] == "True":
             return None
         if task_data:
             return task_data
@@ -64,7 +64,7 @@ class TaskService:
         task_data = g.redis_client.get(f"task:{task_id}")
         if not task_data:
             return None
-        if task_data['deleted'] == True:
+        if task_data['deleted'] == "True":
             return None
         
         task = Task(**task_data)

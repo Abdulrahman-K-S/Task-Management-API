@@ -43,7 +43,7 @@ class UserService:
             (dict): A dictionary containing the user data if found, else an error message.
         """
         user_data = g.redis_client.get(f"user:{user_id}")
-        if user_data['deleted'] == True:
+        if user_data['deleted'] == "True":
             return None
         if user_data:
             return user_data
@@ -65,7 +65,7 @@ class UserService:
         user_data = g.redis_client.get(f"user:{user_id}")
         if not user_data:
             return None
-        if user_data['deleted'] == True:
+        if user_data['deleted'] == "True":
             return None
         
         user = User(**user_data)

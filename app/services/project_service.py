@@ -42,7 +42,7 @@ class ProjectService:
             (dict): A dictionary containing the project data if found, else an error message.
         """
         project_data = g.redis_client.get(f"project:{project_id}")
-        if project_data['deleted'] == True:
+        if project_data['deleted'] == "True":
             return None
         if project_data:
             return project_data
@@ -64,7 +64,7 @@ class ProjectService:
         project_data = g.redis_client.get(f"project:{project_id}")
         if not project_data:
             return None
-        if project_data['deleted'] == True:
+        if project_data['deleted'] == "True":
             return None
         
         project = Project(**project_data)

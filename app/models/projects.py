@@ -3,7 +3,7 @@ class Project:
 
     This class represents a project with attributes such as id, name, description, and status.
     """
-    def __init__(self, project_id, name, description, status='active', deleted='false'):
+    def __init__(self, project_id, name, description, status='active', deleted='False'):
         self.project_id = project_id
         self.name = name
         self.description = description
