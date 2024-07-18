@@ -43,3 +43,22 @@ class Project(Resource):
     def delete(self, project_id):
         """Delete a project given its identifier"""
         return ProjectController.delete_project(project_id)
+
+@projects_bp.route('/<project_id>/<task_id>')
+@projects_bp.param('project_id', 'The project identifier')
+@projects_bp.param('task_id', 'The task identifier')
+class ProjectTask(Resource):
+    @projects_bp.response(200, 'Tasks found')
+    @projects_bp.response(404, 'Project not found or no tasks assigned')
+    def put(self, project_id, task_id):
+        """Update a task to the project's list"""
+        return ProjectController.assign_task_to_project(task_id, project_id)
+
+@projects_bp.route('/<project_id>/tasks')
+@projects_bp.param('project_id', 'The project identifier')
+class ProjectTasks(Resource):
+    @projects_bp.response(200, 'Tasks found')
+    @projects_bp.response(404, 'Project not found or no tasks assigned')
+    def get(self, project_id):
+        """Fetch all tasks assigned to a project"""
+        return ProjectController.get_tasks_for_project(project_id)

@@ -95,3 +95,38 @@ class ProjectController:
         """
         projects = ProjectService.get_all_projects()
         return {"projects": projects}, 200
+
+    @staticmethod
+    def assign_task_to_project(task_id, project_id):
+        """assign_task_to_project
+
+        Handles the HTTP PUT request to assign a task to a project.
+
+        Arguments:
+            task_id (str): The ID of the task to assign.
+            project_id (str): The ID of the project to assign the task to.
+
+        Return:
+            (Response): A Flask response object containing the updated project data and a success message.
+        """
+        project = ProjectService.assign_task_to_project(task_id, project_id)
+        if not project:
+            abort(404, 'Project not found')
+        return {"message": "Task assigned to project successfully", "project": project}, 200
+
+    @staticmethod
+    def get_tasks_for_project(project_id):
+        """get_tasks_for_project
+
+        Handles the HTTP GET request to retrieve all tasks assigned to a project.
+
+        Arguments:
+            project_id (str): The ID of the project.
+
+        Return:
+            (Response): A Flask response object containing all tasks assigned to the project.
+        """
+        tasks = ProjectService.get_tasks_for_project(project_id)
+        if not tasks:
+            abort(404, 'Project not found or no tasks assigned')
+        return {"tasks": tasks}, 200

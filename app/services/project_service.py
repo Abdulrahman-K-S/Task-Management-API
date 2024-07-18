@@ -107,3 +107,54 @@ class ProjectService:
             (list): A list of dictionaries containing all projects.
         """
         return g.redis_client.get_all_with_prefix("project")
+
+    @staticmethod
+    def assign_task_to_project(task_id, project_id):
+        """assign_task_to_project
+
+        Assigns a task to a project by adding the task_id to the project's 'task_ids' list.
+
+        Arguments:
+            task_id (str): The ID of the task to assign.
+            project_id (str): The ID of the project to assign the task to.
+
+        Return:
+            (dict): A dictionary containing the updated project data and a success message.
+        """
+        project_data = g.redis_client.get(f"project:{project_id}")
+        if not project_data:
+            return None
+        if project_data['deleted'] == "True":
+            return None
+        
+        project = Project(**project_data)
+        if task_id not in project.task_ids:
+            project.task_ids.append(task_id)
+            g.redis_client.set(f"project:{project_id}", project.to_dict())
+        return project.to_dict()
+    
+    @staticmethod
+    def get_tasks_for_project(project_id):
+        """get_tasks_for_project
+
+        Retrieves all tasks assigned to a specific project.
+
+        Arguments:
+            project_id (str): The ID of the project to retrieve tasks for.
+
+        Return:
+            (list): A list of dictionaries containing all tasks assigned to the project.
+        """
+        project_data = g.redis_client.get(f"project:{project_id}")
+        if not project_data:
+            return None
+        if project_data['deleted'] == "True":
+            return None
+        
+        project = Project(**project_data)
+        tasks = []
+        for task_id in project.task_ids:
+            task_data = g.redis_client.get(f"task:{task_id}")
+            if task_data['deleted'] == "False":
+                tasks.append(task_data)
+        return tasks
