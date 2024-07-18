@@ -24,7 +24,8 @@ class TaskService:
         task = Task(
             task_id=task_id,
             title=data['title'],
-            description=data.get('description', '')
+            description=data.get('description', ''),
+            status=data.get('status', 'pending')
         )
         g.redis_client.set(f"task:{task_id}", task.to_dict())
         return task.to_dict()
