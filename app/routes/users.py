@@ -7,7 +7,6 @@ user_model = users_bp.model('User', {
     'name': fields.String(required=True, description='The user name'),
     'email': fields.String(required=True, description='The user email'),
     'password': fields.String(required=True, description='The user password'),
-    'deleted': fields.String(description='An indication if it\'s deleted or not')
 })
 
 @users_bp.route('/')

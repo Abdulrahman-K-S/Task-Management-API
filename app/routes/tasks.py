@@ -9,7 +9,6 @@ task_model = tasks_bp.model('Task', {
     'description': fields.String(required=True, description='The task description'),
     'status': fields.String(description='The task status'),
     'assigned_to': fields.String(description='The user whom is assigned to the task'),
-    'deleted': fields.String(description='An indication if it\'s deleted or not')
 })
 
 @tasks_bp.route('/')

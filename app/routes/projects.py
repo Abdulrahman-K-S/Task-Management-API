@@ -8,7 +8,6 @@ project_model = projects_bp.model('Project', {
     'description': fields.String(required=True, description='The project description'),
     'status': fields.String(description='The project status'),
     'task_id': fields.List(fields.String(description="A list of all the tasks assigned to a project")),
-    'deleted': fields.String(description='An indication if it\'s deleted or not')
 })
 
 @projects_bp.route('/')
