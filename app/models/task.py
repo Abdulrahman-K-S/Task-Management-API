@@ -4,12 +4,13 @@ class Task:
     This class represents a task with a attributes such as
     id, title, and status.
     """
-    def __init__(self, task_id, title, description, status='pending', deleted='False'):
+    def __init__(self, task_id, title, description, status='pending', deleted='False', assigned_to=None):
         self.task_id = task_id
         self.title = title
         self.description = description
         self.status = status
         self.deleted = deleted
+        self.assigned_to = assigned_to
 
     def to_dict(self):
         """to_dict
@@ -24,6 +25,7 @@ class Task:
             'title': self.title,
             'description': self.description,
             'status': self.status,
+            'assigned_to': self.assigned_to,
             'deleted': self.deleted
         }
 
@@ -44,5 +46,6 @@ class Task:
             title=data['title'],
             description=data.get('description', ''),
             status=data.get('status', 'pending'),
+            assigned_to=data.get('assigned_to', None),
             deleted=data.get('deleted', 'false')
         )

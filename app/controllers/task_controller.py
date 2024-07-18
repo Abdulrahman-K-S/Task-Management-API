@@ -93,3 +93,21 @@ class TaskController:
         """
         tasks = TaskService.get_all_tasks()
         return {"tasks": tasks}, 200
+
+    @staticmethod
+    def assign_task_to_user(task_id, user_id):
+        """assign_task_to_user
+
+        Handles the HTTP PUT request to assign a user to a task.
+
+        Arguments:
+            task_id (str): The ID of the task to assign.
+            user_id (str): The ID of the user to assign the task to.
+
+        Return:
+            (Response): A Flask response object containing the updated task data and a success message.
+        """
+        task = TaskService.assign_task_to_user(task_id, user_id)
+        if not task:
+            abort(404, 'Task not found')
+        return {"message": "User assigned to task successfully", "task": task}, 200

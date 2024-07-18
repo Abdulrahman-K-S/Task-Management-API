@@ -107,3 +107,27 @@ class TaskService:
             (list): A list of dictionaries containing all tasks.
         """
         return g.redis_client.get_all_with_prefix("task")
+
+    @staticmethod
+    def assign_task_to_user(task_id, user_id):
+        """assign_task_to_user
+
+        Assigns a task to a user by updating the task's 'assigned_to' field.
+
+        Arguments:
+            task_id (str): The ID of the task to assign.
+            user_id (str): The ID of the user to assign the task to.
+
+        Return:
+            (dict): A dictionary containing the updated task data and a success message.
+        """
+        task_data = g.redis_client.get(f"task:{task_id}")
+        if not task_data:
+            return None
+        if task_data['deleted'] == "True":
+            return None
+        
+        task = Task(**task_data)
+        task.assigned_to = user_id
+        g.redis_client.set(f"task:{task_id}", task.to_dict())
+        return task.to_dict()

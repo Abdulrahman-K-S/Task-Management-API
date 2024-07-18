@@ -44,3 +44,13 @@ class Task(Resource):
     def delete(self, task_id):
         """Delete a task given its identifier"""
         return TaskController.delete_task(task_id)
+
+@tasks_bp.route('/<task_id>/<user_id>')
+@tasks_bp.param('task_id', 'The task identifier')
+@tasks_bp.param('user_id', 'The user identifier')
+class TaskUser(Resource):
+    @tasks_bp.response(200, 'Task assigned successfylly')
+    @tasks_bp.response(404, 'Task not found')
+    def put(self, task_id, user_id):
+        """Update the task assigning it to user"""
+        return TaskController.assign_task_to_user(task_id, user_id)
