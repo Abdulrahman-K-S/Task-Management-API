@@ -16,6 +16,11 @@ class ProjectList(Resource):
     def post(self):
         """Create a new project"""
         return ProjectController.create_project()
+    
+    @projects_bp.response(200, 'Users retrieved successfully')
+    def get(self):
+        """Retrieve all users"""
+        return ProjectController.get_all_projects()
 
 @projects_bp.route('/<project_id>')
 @projects_bp.param('project_id', 'The project identifier')

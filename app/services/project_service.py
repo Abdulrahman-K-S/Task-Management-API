@@ -26,7 +26,7 @@ class ProjectService:
             name=data['name'],
             description=data.get('description', '')
         )
-        g.redis_client.set(project_id, project.to_dict())
+        g.redis_client.set(f"project:{project_id}", project.to_dict())
         return project.to_dict()
 
     @staticmethod
@@ -41,7 +41,9 @@ class ProjectService:
         Return:
             (dict): A dictionary containing the project data if found, else an error message.
         """
-        project_data = g.redis_client.get(project_id)
+        project_data = g.redis_client.get(f"project:{project_id}")
+        if project_data['deleted'] == True:
+            return None
         if project_data:
             return project_data
         return None
@@ -59,8 +61,10 @@ class ProjectService:
         Return:
             (dict): A dictionary containing the updated project data and a success message.
         """
-        project_data = g.redis_client.get(project_id)
+        project_data = g.redis_client.get(f"project:{project_id}")
         if not project_data:
+            return None
+        if project_data['deleted'] == True:
             return None
         
         project = Project(**project_data)
@@ -71,7 +75,7 @@ class ProjectService:
             project.description = data.get('description', project.description)
         if data.get('status', project.status) not in execluded:
             project.status = data.get('status', project.status)
-        g.redis_client.set(project_id, project.to_dict())
+        g.redis_client.set(f"project:{project_id}", project.to_dict())
         return project.to_dict()
 
     @staticmethod
@@ -87,4 +91,19 @@ class ProjectService:
             (dict): A dictionary containing a success message if the project was deleted,
             else an error message.
         """
-        g.redis_client.client.delete(project_id)
+        project_data = g.redis_client.get(f"project:{project_id}")
+        
+        project = Project(**project_data)
+        project.deleted = "True"
+        g.redis_client.set(f"project:{project_id}", project.to_dict())
+
+    @staticmethod
+    def get_all_projects():
+        """get_all_projects
+
+        Retrieves all projects from Redis.
+
+        Return:
+            (list): A list of dictionaries containing all projects.
+        """
+        return g.redis_client.get_all_with_prefix("project")

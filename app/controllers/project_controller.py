@@ -83,3 +83,15 @@ class ProjectController:
             abort(404, "Project not found")
         ProjectService.delete_project(project_id)
         return {"message": "Project deleted successfully"}, 200
+
+    @staticmethod
+    def get_all_projects():
+        """get_all_projects
+
+        Handles the HTTP GET request to retrieve all projects.
+
+        Return:
+            (Response): A Flask response object containing all projects data.
+        """
+        projects = ProjectService.get_all_projects()
+        return {"projects": projects}, 200

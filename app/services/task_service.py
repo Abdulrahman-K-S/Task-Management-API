@@ -26,7 +26,7 @@ class TaskService:
             title=data['title'],
             description=data.get('description', '')
         )
-        g.redis_client.set(task_id, task.to_dict())
+        g.redis_client.set(f"task:{task_id}", task.to_dict())
         return task.to_dict()
 
     @staticmethod
@@ -41,7 +41,7 @@ class TaskService:
         Return:
             (dict): A dictionary containing the task data if found, else an error message.
         """
-        task_data = g.redis_client.get(task_id)
+        task_data = g.redis_client.get(f"task:{task_id}")
         if task_data['deleted'] == 'True':
             return None
         if task_data:
@@ -61,7 +61,7 @@ class TaskService:
         Return:
             (dict): A dictionary containing the updated task data and a success message.
         """
-        task_data = g.redis_client.get(task_id)
+        task_data = g.redis_client.get(f"task:{task_id}")
         if not task_data:
             return None
         if task_data['deleted'] == True:
@@ -75,7 +75,7 @@ class TaskService:
             task.description = data.get('description', task.description)
         if data.get('status', task.status) not in execluded:
             task.status = data.get('status', task.status)
-        g.redis_client.set(task_id, task.to_dict())
+        g.redis_client.set(f"task:{task_id}", task.to_dict())
         return task.to_dict()
 
     @staticmethod
@@ -91,8 +91,19 @@ class TaskService:
             (dict): A dictionary containing a success message if the task was deleted,
             else an error message.
         """
-        task_data = g.redis_client.get(task_id)
+        task_data = g.redis_client.get(f"task:{task_id}")
         
         task = Task(**task_data)
         task.deleted = "True"
-        g.redis_client.set(task_id, task.to_dict())
+        g.redis_client.set(f"task:{task_id}", task.to_dict())
+
+    @staticmethod
+    def get_all_tasks():
+        """get_all_tasks
+
+        Retrieves all tasks from Redis.
+
+        Return:
+            (list): A list of dictionaries containing all tasks.
+        """
+        return g.redis_client.get_all_with_prefix("task")

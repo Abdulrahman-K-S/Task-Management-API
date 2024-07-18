@@ -17,6 +17,11 @@ class TaskList(Resource):
     def post(self):
         """Create a new task"""
         return TaskController.create_task()
+    
+    @tasks_bp.response(200, 'Tasks retrieved successfully')
+    def get(self):
+        """Get all tasks"""
+        return TaskController.get_all_tasks()
 
 @tasks_bp.route('/<task_id>')
 @tasks_bp.param('task_id', 'The task identifier')

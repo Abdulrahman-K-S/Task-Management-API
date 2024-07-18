@@ -61,3 +61,22 @@ class RedisClient:
         if value is not None:
             return json.loads(value)
         return None
+
+    def get_all_with_prefix(self, prefix):
+        """get_all_with_prefix
+
+        Retrieves all keys with a specific prefix and their associated values.
+        
+        Arguments:
+            prefix (str): The prefix of the keys to retrieve.
+        
+        Return:
+            (list): A list of dictionaries containing key-value pairs.
+        """
+        keys = self.client.keys(f"{prefix}:*")
+        result = []
+        for key in keys:
+            value = self.get(key)
+            if value["deleted"] == "false":
+                result.append(value)
+        return result

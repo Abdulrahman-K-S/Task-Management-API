@@ -81,3 +81,15 @@ class TaskController:
             abort(404, "Task not found")
         TaskService.delete_task(task_id)
         return {"message": "Task deleted successfully"}, 200
+
+    @staticmethod
+    def get_all_tasks():
+        """get_all_tasks
+
+        Handles the HTTP GET request to retrieve all tasks.
+
+        Return:
+            (Response): A Flask response object containing all task data.
+        """
+        tasks = TaskService.get_all_tasks()
+        return {"tasks": tasks}, 200

@@ -17,6 +17,11 @@ class UserList(Resource):
         """Create a new user"""
         return UserController.create_user()
 
+    @users_bp.response(200, 'Users retrieved successfully')
+    def get(self):
+        """Retrieve all users"""
+        return UserController.get_all_users()
+
 @users_bp.route('/<user_id>')
 @users_bp.param('user_id', 'The user identifier')
 class User(Resource):

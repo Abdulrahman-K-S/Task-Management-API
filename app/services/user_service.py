@@ -27,7 +27,7 @@ class UserService:
             email=data['email'],
             password=data['password']
         )
-        g.redis_client.set(user_id, user.to_dict())
+        g.redis_client.set(f"user:{user_id}", user.to_dict())
         return user.to_dict()
 
     @staticmethod
@@ -42,7 +42,9 @@ class UserService:
         Return:
             (dict): A dictionary containing the user data if found, else an error message.
         """
-        user_data = g.redis_client.get(user_id)
+        user_data = g.redis_client.get(f"user:{user_id}")
+        if user_data['deleted'] == True:
+            return None
         if user_data:
             return user_data
         return None
@@ -60,8 +62,10 @@ class UserService:
         Return:
             (dict): A dictionary containing the updated user data and a success message.
         """
-        user_data = g.redis_client.get(user_id)
+        user_data = g.redis_client.get(f"user:{user_id}")
         if not user_data:
+            return None
+        if user_data['deleted'] == True:
             return None
         
         user = User(**user_data)
@@ -72,7 +76,7 @@ class UserService:
             user.email = data.get('email', user.email)
         if data.get('password', user.password) not in execluded:
             user.password = data.get('password', user.password)
-        g.redis_client.set(user_id, user.to_dict())
+        g.redis_client.set(f"user:{user_id}", user.to_dict())
         return user.to_dict()
 
     @staticmethod
@@ -88,4 +92,19 @@ class UserService:
             (dict): A dictionary containing a success message if the user was deleted,
             else an error message.
         """
-        g.redis_client.client.delete(user_id)
+        user_data = g.redis_client.get(f"user:{user_id}")
+        
+        user = User(**user_data)
+        user.deleted = "True"
+        g.redis_client.set(f"user:{user_id}", user.to_dict())
+
+    @staticmethod
+    def get_all_users():
+        """get_all_users
+
+        Retrieves all users from Redis.
+
+        Return:
+            (list): A list of dictionaries containing all users.
+        """
+        return g.redis_client.get_all_with_prefix("user")

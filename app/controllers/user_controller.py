@@ -83,3 +83,15 @@ class UserController:
             abort(404, 'User not found')
         UserService.delete_user(user_id)
         return {"message": "User deleted successfully"}, 200
+
+    @staticmethod
+    def get_all_users():
+        """get_all_users
+
+        Handles the HTTP GET request to retrieve all users.
+
+        Return:
+            (Response): A Flask response object containing all users data.
+        """
+        users = UserService.get_all_users()
+        return {"users": users}, 200
