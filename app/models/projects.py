@@ -3,11 +3,12 @@ class Project:
 
     This class represents a project with attributes such as id, name, description, and status.
     """
-    def __init__(self, project_id, name, description, status='active'):
+    def __init__(self, project_id, name, description, status='active', deleted='false'):
         self.project_id = project_id
         self.name = name
         self.description = description
         self.status = status
+        self.deleted = deleted
 
     def to_dict(self):
         """to_dict
@@ -21,7 +22,8 @@ class Project:
             'project_id': self.project_id,
             'name': self.name,
             'description': self.description,
-            'status': self.status
+            'status': self.status,
+            'deleted': self.deleted
         }
 
     @staticmethod
@@ -40,5 +42,6 @@ class Project:
             project_id=data['project_id'],
             name=data['name'],
             description=data.get('description', ''),
-            status=data.get('status', 'active')
+            status=data.get('status', 'active'),
+            deleted=data.get('deleted', 'false')
         )

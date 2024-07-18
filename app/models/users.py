@@ -3,11 +3,12 @@ class User:
 
     This class represents a user with attributes such as id, name, email, and password.
     """
-    def __init__(self, user_id, name, email, password):
+    def __init__(self, user_id, name, email, password, deleted='false'):
         self.user_id = user_id
         self.name = name
         self.email = email
         self.password = password
+        self.deleted = deleted
 
     def to_dict(self):
         """to_dict
@@ -21,7 +22,8 @@ class User:
             'user_id': self.user_id,
             'name': self.name,
             'email': self.email,
-            'password': self.password
+            'password': self.password,
+            'deleted': self.deleted
         }
 
     @staticmethod
@@ -40,5 +42,6 @@ class User:
             user_id=data['user_id'],
             name=data['name'],
             email=data['email'],
-            password=data['password']
+            password=data['password'],
+            deleted=data.get['deleted', 'false']
         )
