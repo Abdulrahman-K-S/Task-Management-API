@@ -77,6 +77,6 @@ class RedisClient:
         result = []
         for key in keys:
             value = self.get(key)
-            if value["deleted"] == "false":
+            if value["deleted"] == "False":
                 result.append(value)
         return result
